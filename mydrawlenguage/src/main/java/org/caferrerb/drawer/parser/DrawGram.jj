@@ -1,0 +1,162 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  static = true;
+}
+
+PARSER_BEGIN(DrawGram)
+package org.caferrerb.drawer.parser;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import org.caferrerb.drawer.parser.model.*;
+
+public class DrawGram
+{
+}
+
+PARSER_END(DrawGram)
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+}
+
+TOKEN :
+{
+  < ASSIGN : ":=" >
+| < PAR_OPEN : "(" >
+| < PAR_CLOSE : ")" >
+| < PARAM_SEP : "," >
+}
+
+TOKEN :
+{
+  < NUMBER : ([ "0"-"9" ])+ >
+| < POINT : "point" >
+| < RECTANGLE : "rectangle" >
+| < CIRCLE : "circle" >
+| < IDENTIFIER : ([ "a"-"z" ])+ >
+}
+
+Dibujo draw() :
+{
+  ElementoSintactico s;
+  Dibujo dibujo = new Dibujo();
+}
+{
+  (
+    s = rectangle()
+    {
+      dibujo.addSentencia(s);
+    }
+  | s = circle()
+    {
+      dibujo.addSentencia(s);
+    }
+  | s = assign()
+    {
+      dibujo.addSentencia(s);
+    }
+  )*
+  {
+    return dibujo;
+  }
+}
+
+Parametro Parametro() :
+{
+  Token t;
+}
+{
+  (
+    t = < NUMBER >
+  | t = < IDENTIFIER >
+  )
+  {
+    return new Parametro(t.image);
+  }
+}
+
+Asignacion assign() :
+{
+  Token left, right;
+}
+{
+  left = < IDENTIFIER > < ASSIGN >
+  (
+    right = < NUMBER >
+  | right = < IDENTIFIER >
+  )
+  {
+    return new Asignacion(left.image, right.image);
+  }
+}
+
+Punto point() :
+{
+  Parametro p1,p2;
+}
+{
+  < POINT > < PAR_OPEN > p1=Parametro() < PARAM_SEP > 
+  p2=Parametro() < PAR_CLOSE >
+
+  {
+    return new Punto(p1,p2);
+  }
+}
+
+
+Rectangulo rectangle() :
+{
+  Punto p1 = null, p2 = null;
+  Parametro x1 = null, x2 = null, y1 = null, y2 = null;
+}
+{
+  < RECTANGLE > < PAR_OPEN >
+  (
+    p1 = point()
+  |
+    (
+      x1 = Parametro() < PARAM_SEP > y1 = Parametro()
+    )
+  )
+  < PARAM_SEP >
+  (
+    p2 = point()
+  |
+    (
+      x2 = Parametro() < PARAM_SEP > y2 = Parametro()
+    )
+  )
+  < PAR_CLOSE >
+  {
+    return new Rectangulo(p1, p2, x1, y1, x2, y2);
+  }
+}
+
+Circulo circle() :
+{
+  Punto pc = null;
+  Parametro xc = null, yc = null;
+  Parametro radio = null;
+}
+{
+  < CIRCLE > < PAR_OPEN >
+  (
+    pc = point()
+  |
+    (
+      xc = Parametro() < PARAM_SEP > yc = Parametro()
+    )
+  )
+  < PARAM_SEP > radio = Parametro() < PAR_CLOSE >
+  {
+    return new Circulo(pc, xc, yc, radio);
+  }
+}

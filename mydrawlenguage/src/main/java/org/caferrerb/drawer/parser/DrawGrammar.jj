@@ -1,43 +1,0 @@
-/**
- * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
- */options{  static = true;}PARSER_BEGIN(DrawGrammar)package org.caferrerb.drawer.parser;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import org.caferrerb.drawer.parser.ParseManager;
-
-public class DrawGrammar{	}PARSER_END(DrawGrammar)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN :{  < ASSIGN : ":=" >
-| < PAR_OPEN : "(" >
-| < PAR_CLOSE : ")" >
-| < PARAM_SEP : "," >}TOKEN :{  < NUMBER : ([ "0"-"9" ])+ >| < POINT : "point" >
-| < RECTANGLE : "rectangle" >
-| < CIRCLE : "circle" >
-| < IDENTIFIER : ([ "a"-"z" ])+ >}void draw():{
-	ParseManager parser = new ParseManager();
-}{ (   rectangle(parser)
- | circle(parser)
- | assign(parser)
- )*}
-void parameter(ParseManager parser):
-{
-	Token t;
-}
-{
- < NUMBER > | < IDENTIFIER > {  }
-}
-
-void assign(ParseManager parser): { } {
-  < IDENTIFIER > < ASSIGN > (< NUMBER > | < IDENTIFIER >)
-}
-
-void point(ParseManager parser): { } {
-	< POINT > <PAR_OPEN > parameter() < PARAM_SEP > parameter() < PAR_CLOSE >
-}
-
-void rectangle(ParseManager parser): { } {
-  < RECTANGLE > <PAR_OPEN > (point() | (parameter() < PARAM_SEP > parameter())) < PARAM_SEP > (point() | (parameter() < PARAM_SEP > parameter())) < PAR_CLOSE > 
-}
-
-void circle(ParseManager parser): { } {
-  < CIRCLE >  <PAR_OPEN > (point() | (parameter() < PARAM_SEP > parameter())) < PARAM_SEP > parameter() < PAR_CLOSE > 
-}

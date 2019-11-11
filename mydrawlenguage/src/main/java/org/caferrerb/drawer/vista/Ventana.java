@@ -14,6 +14,7 @@ import java.io.StringWriter;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.tree.DefaultTreeModel;
 
 import org.caferrerb.drawer.compilador.Compilador;
 import org.caferrerb.drawer.vista.util.JCodeEditor;
@@ -200,7 +201,7 @@ public class Ventana extends javax.swing.JFrame {
 
 			//taError.getTextArea().setText(compilador.getCodigoExec());
 			taError.getTextArea().append(salida.toString());
-	        //arbolDerivacion.setModel(new DefaultTreeModel(compilador.getRaizDerivacion()));
+	        arbolDerivacion.setModel(new DefaultTreeModel(compilador.getRaizDerivacion()));
 
 		} catch (Exception e) {
 			//taError.getTextArea().setText(compilador.getCodigoExec());

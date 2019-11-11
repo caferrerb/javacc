@@ -2,21 +2,23 @@ package org.caferrerb.drawer.compilador;
 
 import java.io.StringReader;
 
-import org.caferrerb.drawer.parser.DrawGrammar;
+import javax.swing.tree.TreeNode;
+
+import org.caferrerb.drawer.parser.DrawGram;
 
 public class Compilador {
 
 	private String codigoExec;
-	private DrawGrammar gramma;
+	private DrawGram gramma;
 	private String console;
-
+	private TreeNode raiz;
 	public Compilador() {
-		gramma = new DrawGrammar(new StringReader(""));
+		gramma = new DrawGram(new StringReader(""));
 	}
 
 	private void compilar(String codigo) throws Exception {
 		gramma.ReInit(new StringReader(codigo));
-		gramma.draw();
+		raiz = gramma.draw();
 		
 	}
 
@@ -26,4 +28,10 @@ public class Compilador {
 		return "";
        
 	}
+
+	public TreeNode getRaizDerivacion() {
+		// TODO Auto-generated method stub
+		return raiz;
+	}
+	
 }
